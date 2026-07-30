@@ -14,7 +14,7 @@ on:
 jobs:
   kind-deploy:
       runs-on: ubuntu-latest
-      if: github.ref_name == 'main'
+      environment: ${{ inputs.environment }}
       name: Helm CI
       steps:
 
@@ -33,11 +33,11 @@ jobs:
             uses: azure/setup-helm@v4.2.0
 
           - name: Helm Install
-            run: helm install --dry-run
+            run: helm install --dry-run ./charts
 
           - name:
             run: |
-              helm upgrade --install todoapp ./сharts --atomic -f ./todoapp/values.yaml \
+              helm upgrade --install todoapp ./charts --atomic -f ./todoapp/values.yaml \
               --set mysql.secrets.MYSQL_ROOT_PASSWORD="${{secrets.MYSQL_ROOT_PASSWORD}}"
               --set mysql.secrets.MYSQL_USER="${{secrets.MYSQL_USER}}"
               --set mysql.secrets.MYSQL_PASSWORD="${{secrets.MYSQL_PASSWORD}}"
